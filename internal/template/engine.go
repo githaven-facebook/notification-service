@@ -93,7 +93,7 @@ func (e *Engine) getTemplate(ctx context.Context, name string, channel model.Not
 }
 
 // getCompiledTemplate returns compiled subject and body templates from cache, compiling if necessary.
-func (e *Engine) getCompiledTemplate(cacheKey string, tmpl *model.NotificationTemplate) (subject *template.Template, body *template.Template, err error) {
+func (e *Engine) getCompiledTemplate(cacheKey string, tmpl *model.NotificationTemplate) (subject, body *template.Template, err error) {
 	e.mu.RLock()
 	entry, ok := e.cache[cacheKey]
 	e.mu.RUnlock()
