@@ -26,14 +26,14 @@ type BatchEntry struct {
 
 // BatchProcessor collects notifications for digest mode and sends them at configured intervals.
 type BatchProcessor struct {
-	dispatcher *Dispatcher
-	notifRepo  repository.NotificationRepository
-	queue      map[BatchKey][]*BatchEntry
-	mu         sync.Mutex
-	logger     *zap.Logger
+	dispatcher    *Dispatcher
+	notifRepo     repository.NotificationRepository
+	queue         map[BatchKey][]*BatchEntry
+	mu            sync.Mutex
+	logger        *zap.Logger
 	flushInterval time.Duration
-	stopCh     chan struct{}
-	wg         sync.WaitGroup
+	stopCh        chan struct{}
+	wg            sync.WaitGroup
 }
 
 // NewBatchProcessor creates a new batch processor.

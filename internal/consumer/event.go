@@ -8,9 +8,9 @@ import (
 type EventType string
 
 const (
-	EventTypeNotification       EventType = "notification"
-	EventTypeBatchNotification  EventType = "batch_notification"
-	EventTypePreferenceUpdate   EventType = "preference_update"
+	EventTypeNotification      EventType = "notification"
+	EventTypeBatchNotification EventType = "batch_notification"
+	EventTypePreferenceUpdate  EventType = "preference_update"
 )
 
 // NotificationEvent is the Kafka event for a single notification request.

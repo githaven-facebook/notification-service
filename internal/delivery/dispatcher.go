@@ -18,10 +18,10 @@ const (
 
 // Dispatcher routes notifications to channel providers and tracks delivery results.
 type Dispatcher struct {
-	providers  map[model.NotificationChannel]provider.Provider
-	notifRepo  repository.NotificationRepository
-	logger     *zap.Logger
-	timeout    time.Duration
+	providers map[model.NotificationChannel]provider.Provider
+	notifRepo repository.NotificationRepository
+	logger    *zap.Logger
+	timeout   time.Duration
 }
 
 // NewDispatcher creates a new notification dispatcher.
