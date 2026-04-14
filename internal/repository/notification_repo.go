@@ -95,7 +95,7 @@ func (r *postgresNotificationRepo) BatchCreate(ctx context.Context, notification
 
 	now := time.Now()
 	for i := range notifications {
-		n := &notifications[i]
+		n := notifications[i]
 		if n.ID == uuid.Nil {
 			n.ID = uuid.New()
 		}
