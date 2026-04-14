@@ -29,11 +29,11 @@ type ServerConfig struct {
 
 // KafkaConfig holds Kafka consumer configuration.
 type KafkaConfig struct {
-	Brokers       []string `yaml:"brokers"`
-	ConsumerGroup string   `yaml:"consumer_group"`
-	Topics        []string `yaml:"topics"`
-	MinBytes      int      `yaml:"min_bytes"`
-	MaxBytes      int      `yaml:"max_bytes"`
+	Brokers       []string      `yaml:"brokers"`
+	ConsumerGroup string        `yaml:"consumer_group"`
+	Topics        []string      `yaml:"topics"`
+	MinBytes      int           `yaml:"min_bytes"`
+	MaxBytes      int           `yaml:"max_bytes"`
 	MaxWait       time.Duration `yaml:"max_wait"`
 }
 
@@ -116,12 +116,12 @@ type InAppConfig struct {
 
 // ThrottleConfig holds rate limiting configuration.
 type ThrottleConfig struct {
-	MaxPerUserPerHour  int `yaml:"max_per_user_per_hour"`
-	MaxPushPerHour     int `yaml:"max_push_per_hour"`
-	MaxEmailPerHour    int `yaml:"max_email_per_hour"`
-	MaxSMSPerHour      int `yaml:"max_sms_per_hour"`
-	MaxInAppPerHour    int `yaml:"max_in_app_per_hour"`
-	DeduplicationTTL   int `yaml:"deduplication_ttl"` // seconds
+	MaxPerUserPerHour int `yaml:"max_per_user_per_hour"`
+	MaxPushPerHour    int `yaml:"max_push_per_hour"`
+	MaxEmailPerHour   int `yaml:"max_email_per_hour"`
+	MaxSMSPerHour     int `yaml:"max_sms_per_hour"`
+	MaxInAppPerHour   int `yaml:"max_in_app_per_hour"`
+	DeduplicationTTL  int `yaml:"deduplication_ttl"` // seconds
 }
 
 // LogConfig holds logging configuration.

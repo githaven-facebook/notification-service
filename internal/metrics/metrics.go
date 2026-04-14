@@ -7,14 +7,14 @@ import (
 
 // Metrics holds all Prometheus metric collectors for the notification service.
 type Metrics struct {
-	NotificationsSentTotal     *prometheus.CounterVec
-	NotificationSendDuration   *prometheus.HistogramVec
-	DeliveryRetryTotal         *prometheus.CounterVec
-	ThrottleBlockedTotal       *prometheus.CounterVec
+	NotificationsSentTotal      *prometheus.CounterVec
+	NotificationSendDuration    *prometheus.HistogramVec
+	DeliveryRetryTotal          *prometheus.CounterVec
+	ThrottleBlockedTotal        *prometheus.CounterVec
 	KafkaMessagesProcessedTotal *prometheus.CounterVec
-	DeduplicationHitsTotal     *prometheus.CounterVec
-	ActiveBatchQueueSize       *prometheus.GaugeVec
-	TemplateRenderDuration     prometheus.Histogram
+	DeduplicationHitsTotal      *prometheus.CounterVec
+	ActiveBatchQueueSize        *prometheus.GaugeVec
+	TemplateRenderDuration      prometheus.Histogram
 }
 
 // New creates and registers all Prometheus metrics.

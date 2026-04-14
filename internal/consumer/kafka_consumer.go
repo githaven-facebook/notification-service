@@ -15,16 +15,16 @@ import (
 
 // KafkaConsumer consumes notification events from Kafka topics.
 type KafkaConsumer struct {
-	readers     []*kafka.Reader
-	notifSvc    *service.NotificationService
-	prefSvc     *service.PreferenceService
-	logger      *zap.Logger
-	cfg         config.KafkaConfig
+	readers  []*kafka.Reader
+	notifSvc *service.NotificationService
+	prefSvc  *service.PreferenceService
+	logger   *zap.Logger
+	cfg      *config.KafkaConfig
 }
 
 // NewKafkaConsumer creates a new Kafka consumer for all configured topics.
 func NewKafkaConsumer(
-	cfg config.KafkaConfig,
+	cfg *config.KafkaConfig,
 	notifSvc *service.NotificationService,
 	prefSvc *service.PreferenceService,
 	logger *zap.Logger,
@@ -40,7 +40,7 @@ func NewKafkaConsumer(
 			MaxWait:        cfg.MaxWait,
 			CommitInterval: time.Second,
 			StartOffset:    kafka.LastOffset,
-			ErrorLogger:    kafka.LoggerFunc(func(msg string, args ...interface{}) {
+			ErrorLogger: kafka.LoggerFunc(func(msg string, args ...interface{}) {
 				logger.Error(fmt.Sprintf(msg, args...))
 			}),
 		})
@@ -56,12 +56,12 @@ func NewKafkaConsumer(
 	}
 }
 
-// Start launches a goroutine per topic reader and blocks until context is cancelled.
+// Start launches a goroutine per topic reader and blocks until the context is canceled.
 func (c *KafkaConsumer) Start(ctx context.Context) error {
 	errCh := make(chan error, len(c.readers))
 
-	for i, reader := range c.readers {
-		go func(idx int, r *kafka.Reader) {
+	for _, reader := range c.readers {
+		go func(r *kafka.Reader) {
 			c.logger.Info("Starting Kafka consumer",
 				zap.String("topic", r.Config().Topic),
 				zap.String("group", r.Config().GroupID),
@@ -73,7 +73,7 @@ func (c *KafkaConsumer) Start(ctx context.Context) error {
 				)
 				errCh <- err
 			}
-		}(i, reader)
+		}(reader)
 	}
 
 	select {
@@ -91,7 +91,7 @@ func (c *KafkaConsumer) consume(ctx context.Context, reader *kafka.Reader) error
 		msg, err := reader.FetchMessage(ctx)
 		if err != nil {
 			if ctx.Err() != nil {
-				return nil // context cancelled, normal shutdown
+				return nil // context canceled, normal shutdown
 			}
 			c.logger.Error("Fetch Kafka message failed",
 				zap.Error(err),
@@ -100,7 +100,7 @@ func (c *KafkaConsumer) consume(ctx context.Context, reader *kafka.Reader) error
 			return fmt.Errorf("fetch kafka message: %w", err)
 		}
 
-		if err := c.processMessage(ctx, msg); err != nil {
+		if err := c.processMessage(ctx, &msg); err != nil {
 			c.logger.Error("Process Kafka message failed",
 				zap.Error(err),
 				zap.String("topic", msg.Topic),
@@ -121,17 +121,18 @@ func (c *KafkaConsumer) consume(ctx context.Context, reader *kafka.Reader) error
 }
 
 // processMessage deserializes and routes a Kafka message to the appropriate handler.
-func (c *KafkaConsumer) processMessage(ctx context.Context, msg kafka.Message) error {
+func (c *KafkaConsumer) processMessage(ctx context.Context, msg *kafka.Message) error {
 	// Detect event type from header or payload
 	eventTypeHeader := getHeader(msg.Headers, "event_type")
 
 	switch EventType(eventTypeHeader) {
+	case EventTypeNotification:
+		return c.handleNotification(ctx, msg.Value)
 	case EventTypeBatchNotification:
 		return c.handleBatchNotification(ctx, msg.Value)
 	case EventTypePreferenceUpdate:
 		return c.handlePreferenceUpdate(ctx, msg.Value)
 	default:
-		// Default to single notification event
 		return c.handleNotification(ctx, msg.Value)
 	}
 }
@@ -168,7 +169,8 @@ func (c *KafkaConsumer) handleBatchNotification(ctx context.Context, data []byte
 		return fmt.Errorf("unmarshal batch notification event: %w", err)
 	}
 
-	for _, notifEvent := range event.Notifications {
+	for i := range event.Notifications {
+		notifEvent := &event.Notifications[i]
 		req := notifEvent.ToSendRequest()
 		if _, err := c.notifSvc.Send(ctx, req); err != nil {
 			c.logger.Error("Send batch notification from Kafka failed",

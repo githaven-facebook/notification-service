@@ -15,20 +15,20 @@ const (
 
 // NotificationEvent is the Kafka event for a single notification request.
 type NotificationEvent struct {
-	EventType      EventType         `json:"event_type"`
-	TraceID        string            `json:"trace_id,omitempty"`
-	UserID         string            `json:"user_id"`
-	Type           model.NotificationType   `json:"type"`
+	EventType      EventType                 `json:"event_type"`
+	TraceID        string                    `json:"trace_id,omitempty"`
+	UserID         string                    `json:"user_id"`
+	Type           model.NotificationType    `json:"type"`
 	Channel        model.NotificationChannel `json:"channel"`
-	Title          string            `json:"title,omitempty"`
-	Body           string            `json:"body,omitempty"`
-	Data           map[string]string `json:"data,omitempty"`
-	Priority       model.Priority    `json:"priority"`
-	TemplateID     string            `json:"template_id,omitempty"`
-	TemplateParams map[string]string `json:"template_params,omitempty"`
-	DeviceToken    string            `json:"device_token,omitempty"`
-	Recipient      string            `json:"recipient,omitempty"`
-	Locale         string            `json:"locale,omitempty"`
+	Title          string                    `json:"title,omitempty"`
+	Body           string                    `json:"body,omitempty"`
+	Data           map[string]string         `json:"data,omitempty"`
+	Priority       model.Priority            `json:"priority"`
+	TemplateID     string                    `json:"template_id,omitempty"`
+	TemplateParams map[string]string         `json:"template_params,omitempty"`
+	DeviceToken    string                    `json:"device_token,omitempty"`
+	Recipient      string                    `json:"recipient,omitempty"`
+	Locale         string                    `json:"locale,omitempty"`
 }
 
 // ToSendRequest converts a NotificationEvent to a model.SendRequest.
@@ -55,22 +55,22 @@ func (e *NotificationEvent) ToSendRequest() *model.SendRequest {
 
 // BatchNotificationEvent is the Kafka event for sending multiple notifications.
 type BatchNotificationEvent struct {
-	EventType     EventType            `json:"event_type"`
-	TraceID       string               `json:"trace_id,omitempty"`
-	Notifications []NotificationEvent  `json:"notifications"`
+	EventType     EventType           `json:"event_type"`
+	TraceID       string              `json:"trace_id,omitempty"`
+	Notifications []NotificationEvent `json:"notifications"`
 }
 
 // PreferenceUpdateEvent is the Kafka event for updating a user's notification preferences.
 type PreferenceUpdateEvent struct {
-	EventType       EventType                  `json:"event_type"`
-	TraceID         string                     `json:"trace_id,omitempty"`
-	UserID          string                     `json:"user_id"`
-	Channel         model.NotificationChannel  `json:"channel"`
-	Enabled         bool                       `json:"enabled"`
-	QuietHoursStart *string                    `json:"quiet_hours_start,omitempty"`
-	QuietHoursEnd   *string                    `json:"quiet_hours_end,omitempty"`
-	DigestMode      bool                       `json:"digest_mode"`
-	Frequency       model.DigestFrequency      `json:"frequency,omitempty"`
+	EventType       EventType                 `json:"event_type"`
+	TraceID         string                    `json:"trace_id,omitempty"`
+	UserID          string                    `json:"user_id"`
+	Channel         model.NotificationChannel `json:"channel"`
+	Enabled         bool                      `json:"enabled"`
+	QuietHoursStart *string                   `json:"quiet_hours_start,omitempty"`
+	QuietHoursEnd   *string                   `json:"quiet_hours_end,omitempty"`
+	DigestMode      bool                      `json:"digest_mode"`
+	Frequency       model.DigestFrequency     `json:"frequency,omitempty"`
 }
 
 // ToUpdateRequest converts a PreferenceUpdateEvent to a model.UpdatePreferenceRequest.

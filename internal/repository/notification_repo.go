@@ -9,6 +9,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+
 	"github.com/nicedavid98/notification-service/internal/model"
 )
 
@@ -93,7 +94,8 @@ func (r *postgresNotificationRepo) BatchCreate(ctx context.Context, notification
 		)`
 
 	now := time.Now()
-	for _, n := range notifications {
+	for i := range notifications {
+		n := &notifications[i]
 		if n.ID == uuid.Nil {
 			n.ID = uuid.New()
 		}

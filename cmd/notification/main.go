@@ -210,7 +210,7 @@ func run() error {
 	}
 
 	// Start Kafka consumer
-	kafkaConsumer := consumer.NewKafkaConsumer(cfg.Kafka, notifService, prefService, logger)
+	kafkaConsumer := consumer.NewKafkaConsumer(&cfg.Kafka, notifService, prefService, logger)
 	go func() {
 		logger.Info("Starting Kafka consumer")
 		if err := kafkaConsumer.Start(ctx); err != nil {
