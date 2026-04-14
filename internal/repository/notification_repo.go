@@ -24,7 +24,7 @@ type NotificationRepository interface {
 	GetByUserID(ctx context.Context, userID string, limit, offset int) ([]*model.Notification, error)
 	GetByStatus(ctx context.Context, status model.NotificationStatus, limit int) ([]*model.Notification, error)
 	GetByUserAndType(ctx context.Context, userID string, notifType model.NotificationType, limit int) ([]*model.Notification, error)
-	GetPendingForRetry(ctx context.Context, maxRetries int, limit int) ([]*model.Notification, error)
+	GetPendingForRetry(ctx context.Context, maxRetries, limit int) ([]*model.Notification, error)
 }
 
 // postgresNotificationRepo is the PostgreSQL implementation of NotificationRepository.
@@ -225,7 +225,7 @@ func (r *postgresNotificationRepo) GetByUserAndType(ctx context.Context, userID 
 	return scanNotifications(rows)
 }
 
-func (r *postgresNotificationRepo) GetPendingForRetry(ctx context.Context, maxRetries int, limit int) ([]*model.Notification, error) {
+func (r *postgresNotificationRepo) GetPendingForRetry(ctx context.Context, maxRetries, limit int) ([]*model.Notification, error) {
 	query := `
 		SELECT id, user_id, type, channel, title, body, data, priority, status,
 		       template_id, template_params, device_token, recipient,

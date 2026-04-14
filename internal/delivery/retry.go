@@ -132,7 +132,7 @@ func (r *RetryManager) calculateDelay(attempt int) time.Duration {
 	}
 
 	// Add jitter: ±30%
-	jitter := 1.0 + (rand.Float64()*2-1)*defaultJitterRange //nolint:gosec
+	jitter := 1.0 + (rand.Float64()*2-1)*defaultJitterRange //nolint:gosec // crypto/rand not needed for jitter calculation
 	delay = time.Duration(float64(delay) * jitter)
 
 	if delay < 0 {

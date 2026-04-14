@@ -24,7 +24,7 @@ const (
 
 // APNSProvider sends push notifications via Apple Push Notification Service.
 type APNSProvider struct {
-	cfg        config.APNSConfig
+	cfg        *config.APNSConfig
 	httpClient *http.Client
 	logger     *zap.Logger
 	baseURL    string
@@ -58,7 +58,7 @@ type apnsErrorResponse struct {
 }
 
 // NewAPNSProvider creates a new APNS push notification provider.
-func NewAPNSProvider(cfg config.APNSConfig, logger *zap.Logger) (*APNSProvider, error) {
+func NewAPNSProvider(cfg *config.APNSConfig, logger *zap.Logger) (*APNSProvider, error) {
 	var cert tls.Certificate
 	var err error
 

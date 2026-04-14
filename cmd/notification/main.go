@@ -51,7 +51,7 @@ func run() error {
 	if err != nil {
 		return fmt.Errorf("build logger: %w", err)
 	}
-	defer logger.Sync() //nolint:errcheck
+	defer logger.Sync() //nolint:errcheck // Sync errors on stderr/stdout are non-actionable at shutdown
 
 	logger.Info("Starting notification service",
 		zap.Int("port", cfg.Server.Port),
@@ -65,7 +65,7 @@ func run() error {
 	m := metrics.New(nil)
 
 	// Initialize PostgreSQL pool
-	dbPool, err := repository.NewPostgresPool(ctx, cfg.DB)
+	dbPool, err := repository.NewPostgresPool(ctx, &cfg.DB)
 	if err != nil {
 		return fmt.Errorf("connect to postgres: %w", err)
 	}
@@ -100,7 +100,7 @@ func run() error {
 	fcmProvider := push.NewFCMProvider(cfg.Channels.FCM, logger)
 	providers[model.ChannelFCM] = fcmProvider
 
-	apnsProvider, err := push.NewAPNSProvider(cfg.Channels.APNS, logger)
+	apnsProvider, err := push.NewAPNSProvider(&cfg.Channels.APNS, logger)
 	if err != nil {
 		logger.Warn("Failed to initialize APNS provider, skipping", zap.Error(err))
 	} else {
